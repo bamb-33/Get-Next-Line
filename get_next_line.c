@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:17:43 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/17 19:22:43 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/17 20:15:03 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ char	*get_next_line(int fd)
 {
 	size_t			size;
 	char			*buffer;
+	char			*tmp;
 	static size_t	i;
 	size_t			j;
 
@@ -34,26 +35,18 @@ char	*get_next_line(int fd)
 			buffer = (char *) ft_realloc(buffer, size);
 		}
 		i += read(fd, &buffer[i], BUFFER_SIZE);
-		printf ("bytes read :%zd\n", i);
-		if (i == 0)
+		if (i == j)
 			return (buffer);
 		if (!buffer[0])
 			return (NULL);
-		while (1)
+		while (j < i)
 		{
-			printf ("buffer : %d\n", buffer[j]);
 			if (buffer[j] == '\n')
 			{
+				tmp = ft_substr(buffer, 0, j);
 				buffer = (char *) ft_realloc(&buffer[j + 1], size);
 				i -= j + 1;
-				printf("found it\n");
-				//return (ft_substr(buffer, 0, j));
-				return (NULL);
-			}
-			else if (!buffer[j] || j == i)
-			{
-				printf("huh\n");
-				break ;
+				return (tmp);
 			}
 			j++;
 		}
