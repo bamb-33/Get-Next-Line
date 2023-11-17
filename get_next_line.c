@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:17:43 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/17 20:45:02 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/17 23:33:05 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,15 @@
 char	*get_next_line(int fd)
 {
 	size_t			size;
-	char			*buffer;
+	static char	*buffer;
 	char			*tmp;
-	static size_t	i;
+	size_t			i;
 	size_t			j;
 
+
 	size = 1024;
-	buffer = (char *) malloc (sizeof(char) * size);
+	if (!buffer)
+		buffer = (char *) malloc (sizeof(char) * size);
 	if (!buffer)
 		return (NULL);
 	buffer[size -1] = 0;
@@ -35,16 +37,18 @@ char	*get_next_line(int fd)
 			buffer = (char *) ft_realloc(buffer, size);
 		}
 		i += read(fd, &buffer[i], BUFFER_SIZE);
-		if (i == j)
-			return (buffer);
 		if (!buffer[0])
 			return (NULL);
+		if (i == j)
+			return (buffer);
 		while (j < i)
 		{
 			if (buffer[j] == '\n')
 			{
 				tmp = ft_substr(buffer, 0, j);
+				printf("buffer before: %s\n", buffer);
 				buffer = (char *) ft_realloc(&buffer[j + 1], size); // WTF
+				printf("buffer after: %s\n\n\n", buffer);
 				i -= j + 1;
 				return (tmp);
 			}
@@ -59,6 +63,6 @@ int main()
 	int fd = open("test.txt", O_RDONLY);
 	// printf("%s", r);
 	for (int i = 0; i < 5; i++)
-		printf("%s\n", get_next_line(fd));
+		printf("r:%s\n", get_next_line(fd));
 	close (fd);
 }
