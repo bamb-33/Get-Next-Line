@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:17:43 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/18 20:24:00 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/18 20:47:27 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*get_next_line(int fd)
 	size_t		j;
 
 	size = 1024;
-	if (fd <= 0) //handle the SIZE_MAX case
+	if (fd < 0 || fd > 1023) //handle the SIZE_MAX case
 		return (NULL);
 	tmp = (char *) malloc (sizeof(char) * size);
 	if (!tmp)
@@ -42,8 +42,12 @@ char	*get_next_line(int fd)
 			{
 				if (buffer[j] == '\n')
 				{
+					//printf("buffer index:   %d\nj:  %zu\n", buffer[j], j);
+					//printf("bfore buffer:   %s\n", buffer);
 					//free (tmp); // TF?????
+					//printf("after buffer:   %s\n", buffer);
 					tmp = ft_substr(buffer, 0, j + 1);
+					//printf("after tmp:   %s\n", tmp);
 					buffer = (char *) ft_realloc(buffer, &buffer[j + 1], size);
 					return (tmp);
 				}
@@ -51,6 +55,7 @@ char	*get_next_line(int fd)
 			}
 		}
 		i = read(fd, tmp, BUFFER_SIZE);
+		//printf("tmp read:  %s\n", tmp);
 		if (i == 0 && (!buffer || buffer[0] == 0))
 		{
 			free (tmp);
@@ -68,16 +73,16 @@ char	*get_next_line(int fd)
 	return (NULL);
 }
 
-int main()
-{
-	int fd = open("test.txt", O_RDONLY);
-	// printf("%s", r);
-	for (int i = 0; i < 5; i++)
-		printf("line :%s\n", get_next_line(fd));
-	system("leaks a.out");
-	// get_next_line(fd);
-	// char *rr = get_next_line(fd);
-	// for (int i = 0; i < 1; i++)
-	// 	printf("%d\n", rr[i]);
-	close (fd);
-}
+// int main()
+// {
+// 	int fd = open("test.txt", O_RDONLY);
+// 	// printf("%s", r);
+// 	for (int i = 0; i < 5; i++)
+// 		printf("line :%s\n", get_next_line(fd));
+// 	//system("leaks a.out");
+// 	// get_next_line(fd);
+// 	// char *rr = get_next_line(fd);
+// 	// for (int i = 0; i < 1; i++)
+// 	// 	printf("%d\n", rr[i]);
+// 	close (fd);
+// }
