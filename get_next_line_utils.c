@@ -6,13 +6,13 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 11:54:47 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/18 16:19:17 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/18 18:30:32 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	*ft_realloc(void *add, size_t size)
+void	*ft_realloc(void *add, void *half_add, size_t size)
 {
 	void	*new_add;
 	int		i;
@@ -21,12 +21,13 @@ void	*ft_realloc(void *add, size_t size)
 	if (!new_add)
 		return (NULL);
 	i = 0;
-	while (((char *)add)[i])
+	while (((char *)half_add)[i])
 	{
-		((char *) new_add)[i] = ((char *) add)[i];
+		((char *) new_add)[i] = ((char *) half_add)[i];
 		i++;
 	}
 	((char *) new_add)[size - 1] = 0;
+	free(add);
 	return (new_add);
 }
 
@@ -81,7 +82,7 @@ char	*ft_strdup(const char *s1)
 	return (scpy);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+char	*ft_strjoin(char *s1, char *s2, int len_read)
 {
 	char	*p;
 	int		i;
@@ -91,10 +92,10 @@ char	*ft_strjoin(char *s1, char *s2)
 	j = 0;
 	if (!s1)
 		return (ft_strdup(s2));
-	p = (char *) malloc ((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
+	p = (char *) malloc ((ft_strlen(s1) + len_read) * sizeof(char));
 	if (p == NULL)
 		return (NULL);
-	while (s1[i] || s2[j])
+	while (s1[i] || j < len_read)
 	{
 		if (s1[i])
 		{
@@ -107,6 +108,7 @@ char	*ft_strjoin(char *s1, char *s2)
 			j++;
 		}
 	}
+	free(s1);
 	p[i + j] = 0;
 	return (p);
 }
