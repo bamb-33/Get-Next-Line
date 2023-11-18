@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 12:22:57 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/17 20:11:07 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/18 12:32:43 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 void	*ft_realloc(void *add, size_t size);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 size_t	ft_strlen(const char *s);
+char	*ft_strjoin(char *s1, char *s2);
 char	*get_next_line(int fd);
 
 #endif
