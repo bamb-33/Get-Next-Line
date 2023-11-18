@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:17:43 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/18 22:02:48 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/18 22:22:52 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	*get_next_line(int fd)
 		}
 		i = read(fd, tmp, BUFFER_SIZE);
 		//printf("tmp read:  %s\n", tmp);
-		if (i == 0 && (!buffer || buffer[0] == 0))
+		if (i == 0 && (!buffer || buffer[0] == 0))  
 		{
 			free (tmp);
 			return (NULL);
