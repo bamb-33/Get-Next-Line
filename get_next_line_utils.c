@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 11:54:47 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/18 12:38:44 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/18 16:19:17 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	*ft_realloc(void *add, size_t size)
 	int		i;
 
 	new_add = malloc (size);
+	if (!new_add)
+		return (NULL);
 	i = 0;
 	while (((char *)add)[i])
 	{
@@ -35,8 +37,6 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 
 	if (!s)
 		return (NULL);
-	// if (start >= ft_strlen(s))
-	// 	return (ft_strdup(""));
 	if (len > ft_strlen(s) - start)
 		len = ft_strlen(s) - start;
 	subs = (char *) malloc ((len + 1) * sizeof(char));
@@ -62,6 +62,25 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
+char	*ft_strdup(const char *s1)
+{
+	char	*scpy;
+	int		slen;
+	int		i;
+
+	i = 0;
+	slen = ft_strlen(s1) + 1;
+	scpy = (char *) malloc (slen * sizeof(char));
+	if (!scpy)
+		return (0);
+	while (i < slen)
+	{
+		scpy[i] = s1[i];
+		i++;
+	}
+	return (scpy);
+}
+
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*p;
@@ -71,7 +90,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	i = 0;
 	j = 0;
 	if (!s1)
-		return (s2);
+		return (ft_strdup(s2));
 	p = (char *) malloc ((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
 	if (p == NULL)
 		return (NULL);

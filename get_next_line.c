@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:17:43 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/18 13:18:01 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/18 16:19:35 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ char	*get_next_line(int fd)
 	tmp[size -1] = 0;
 	i = 0;
 	j = 0;
+	if (fd < 0)
+		return (NULL);
 	while (1)
 	{
 		if (BUFFER_SIZE > size || i == size - 2)
@@ -40,28 +42,36 @@ char	*get_next_line(int fd)
 			{
 				if (buffer[j] == '\n')
 				{
-					tmp = ft_substr(buffer, 0, j);
-					buffer = (char *) ft_realloc(&buffer[j + 1], size); // WTF
+					tmp = ft_substr(buffer, 0, j + 1);
+					buffer = (char *) ft_realloc(&buffer[j + 1], size);
 					return (tmp);
 				}
 				j++;
 			}
 		}
-		i = read(fd, &tmp[i], BUFFER_SIZE);
-		if (i == 0 && !(*tmp) && *buffer)
+		i = read(fd, tmp, BUFFER_SIZE);
+		if (i == 0 && (!buffer || buffer[0] == 0))
 			return (NULL);
 		else if (i == 0)
-			return (buffer);
+		{
+			tmp = buffer;
+			buffer = NULL;
+			return (tmp);
+		}
 		buffer = ft_strjoin(buffer, tmp);
 	}
 	return (NULL);
 }
 
-int main()
-{
-	int fd = open("test.txt", O_RDONLY);
-	// printf("%s", r);
-	for (int i = 0; i < 5; i++)
-		printf("returned line:  %s\n", get_next_line(fd));
-	close (fd);
-}
+// int main()
+// {
+// 	int fd = open("test.txt", O_RDONLY);
+// 	// printf("%s", r);
+// 	for (int i = 0; i < 5; i++)
+// 		printf("line :%s\n", get_next_line(fd));
+// 	// get_next_line(fd);
+// 	// char *rr = get_next_line(fd);
+// 	// for (int i = 0; i < 1; i++)
+// 	// 	printf("%d\n", rr[i]);
+// 	close (fd);
+// }
