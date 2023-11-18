@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 12:22:57 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/17 22:36:57 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/18 22:03:28 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,10 @@
 # include <stdio.h>
 # include <stdint.h>
 
-void	*ft_realloc(void *add, size_t size);
+void	*ft_realloc(void *add, void *half_add, size_t size);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 size_t	ft_strlen(const char *s);
+char	*ft_strjoin(char *s1, char *s2, int len_read);
 char	*get_next_line(int fd);
 
 #endif
