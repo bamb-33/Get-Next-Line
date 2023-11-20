@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:17:43 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/20 20:01:25 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/20 20:49:23 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,19 @@ int	f2(char **buffer, char **tmp, int i)
 	return (-1);
 }
 
+int	allocation(char **tmp, size_t size, int fd)
+{
+	*tmp = (char *) malloc (sizeof(char) * size);
+	if (!(*tmp))
+		return (0);
+	if (read(fd, *tmp, 0) == -1)
+	{
+		free (*tmp);
+		return (0);
+	}
+	(*tmp)[size -1] = 0;
+	return (-1);
+}
 
 char	*get_next_line(int fd)
 {
@@ -73,20 +86,14 @@ char	*get_next_line(int fd)
 	static char	*buffer;
 	char		*tmp;
 	int			i;
+	int			k;
 	size_t		j;
 
 	size = 1024;
 	if (fd < 0 || fd > 1023 || BUFFER_SIZE > SIZE_MAX || BUFFER_SIZE < 0)
 		return (NULL);
-	tmp = (char *) malloc (sizeof(char) * size);
-	if (!tmp)
+	if (allocation(&tmp, size, fd) == 0)
 		return (NULL);
-	if (read(fd, tmp, 0) == -1)
-	{
-		free (tmp);
-		return (NULL);
-	}
-	tmp[size -1] = 0;
 	i = 0;
 	j = 0;
 	while (1)
@@ -96,13 +103,13 @@ char	*get_next_line(int fd)
 			size += BUFFER_SIZE;
 			tmp = (char *) ft_realloc(tmp, tmp, size);
 		}
-		i = f(&buffer, &tmp, &j);
-		if (i == 1)
+		k = f(&buffer, &tmp, &j);
+		if (k == 1)
 			return (tmp);
-		else if(i == 0)
+		else if (k == 0)
 			return (NULL);
 		i = read(fd, tmp, BUFFER_SIZE);
-		int k = f2(&buffer, &tmp, i);
+		k = f2(&buffer, &tmp, i);
 		if (k == 1)
 			return (tmp);
 		else if (k == 0)
