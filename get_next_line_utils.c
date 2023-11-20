@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 11:54:47 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/20 19:20:54 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/20 21:59:35 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	*ft_realloc(void *add, void *half_add, size_t size)
 		((char *) new_add)[i] = ((char *) half_add)[i];
 		i++;
 	}
-	((char *) new_add)[size - 1] = 0;
 	((char *) new_add)[i] = 0;
 	free(add);
 	return (new_add);
@@ -46,7 +45,10 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 		len = ft_strlen(s) - start;
 	subs = (char *) malloc ((len + 1) * sizeof(char));
 	if (subs == NULL)
+	{
+		free(s);
 		return (NULL);
+	}
 	i = 0;
 	while (i < len && s[start + i])
 	{

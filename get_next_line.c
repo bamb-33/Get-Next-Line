@@ -6,37 +6,36 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:17:43 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/20 21:28:30 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/20 21:56:09 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	f(char **buffer, char **tmp, size_t *j)
+int	f(char **buffer, char **tmp)
 {
+	int j;
+
+	j = 0;
 	if (*buffer)
 	{
-		while ((*buffer)[*j])
+		while ((*buffer)[j])
 		{
-			if ((*buffer)[*j] == '\n')
+			if ((*buffer)[j] == '\n')
 			{
 				free(*tmp);
-				*tmp = ft_substr(*buffer, 0, (*j) + 1);
+				*tmp = ft_substr(*buffer, 0, (j) + 1);
 				if (!(*tmp))
-				{
-					free(*buffer);
 					return (0);
-				}
-				*buffer = (char *)ft_realloc(*buffer, &(*buffer)[(*j) + 1], ft_strlen(*buffer));
+				*buffer = (char *)ft_realloc(*buffer, &(*buffer)[(j) + 1], ft_strlen(*buffer));
 				if (!(*buffer))
 				{
 					free(*tmp);
 					return (0);
 				}
-
 				return (1);
 			}
-			(*j)++;
+			(j)++;
 		}
 	}
 	return (-1);
@@ -63,12 +62,14 @@ int	f2(char **buffer, char **tmp, int i)
 		*buffer = NULL;
 		return (1);
 	}
-	return (-1);
+	*buffer = ft_strjoin(*buffer, *tmp, i);
+	if (!(*buffer))
+		return (0);
 }
 
-int	allocation(char **tmp, size_t size, int fd)
+int	allocation(char **tmp, int fd)
 {
-	*tmp = (char *) malloc (sizeof(char) * size);
+	*tmp = (char *) malloc (sizeof(char) * (BUFFER_SIZE + 1));
 	if (!(*tmp))
 		return (0);
 	if (read(fd, *tmp, 0) == -1)
@@ -76,34 +77,25 @@ int	allocation(char **tmp, size_t size, int fd)
 		free (*tmp);
 		return (0);
 	}
-	(*tmp)[size -1] = 0;
+	(*tmp)[BUFFER_SIZE] = 0;
 	return (-1);
 }
 
 char	*get_next_line(int fd)
 {
-	size_t		size;
 	static char	*buffer;
 	char		*tmp;
 	int			i;
 	int			k;
-	size_t		j;
 
-	size = 1024;
 	if (fd < 0 || fd > 1023 || BUFFER_SIZE > SIZE_MAX || BUFFER_SIZE < 0)
 		return (NULL);
-	if (allocation(&tmp, size, fd) == 0)
+	if (allocation(&tmp, fd) == 0)
 		return (NULL);
 	i = 0;
-	j = 0;
 	while (1)
 	{
-		if (BUFFER_SIZE > size)
-		{
-			size += BUFFER_SIZE;
-			tmp = (char *) ft_realloc(tmp, tmp, size);
-		}
-		k = f(&buffer, &tmp, &j);
+		k = f(&buffer, &tmp);
 		if (k == 1)
 			return (tmp);
 		else if (k == 0)
@@ -113,9 +105,6 @@ char	*get_next_line(int fd)
 		if (k == 1)
 			return (tmp);
 		else if (k == 0)
-			return (NULL);
-		buffer = ft_strjoin(buffer, tmp, i);
-		if (!buffer)
 			return (NULL);
 	}
 	return (NULL);
