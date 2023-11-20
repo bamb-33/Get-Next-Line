@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 11:54:47 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/18 18:30:32 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/20 19:20:54 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,12 @@ void	*ft_realloc(void *add, void *half_add, size_t size)
 	void	*new_add;
 	int		i;
 
-	new_add = malloc (size);
+	new_add = malloc (size * sizeof(char));
 	if (!new_add)
+	{
+		free(add);
 		return (NULL);
+	}
 	i = 0;
 	while (((char *)half_add)[i])
 	{
@@ -27,11 +30,12 @@ void	*ft_realloc(void *add, void *half_add, size_t size)
 		i++;
 	}
 	((char *) new_add)[size - 1] = 0;
+	((char *) new_add)[i] = 0;
 	free(add);
 	return (new_add);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	char	*subs;
 	size_t	i;
@@ -63,22 +67,24 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strdup(const char *s1)
+static char	*ft_strdup(char *s1, int len_read)
 {
 	char	*scpy;
-	int		slen;
 	int		i;
 
 	i = 0;
-	slen = ft_strlen(s1) + 1;
-	scpy = (char *) malloc (slen * sizeof(char));
+	scpy = (char *) malloc ((len_read + 1) * sizeof(char));
 	if (!scpy)
-		return (0);
-	while (i < slen)
+	{
+		free (s1);
+		return (NULL);
+	}
+	while (i < len_read)
 	{
 		scpy[i] = s1[i];
 		i++;
 	}
+	scpy[i] = 0;
 	return (scpy);
 }
 
@@ -91,10 +97,14 @@ char	*ft_strjoin(char *s1, char *s2, int len_read)
 	i = 0;
 	j = 0;
 	if (!s1)
-		return (ft_strdup(s2));
-	p = (char *) malloc ((ft_strlen(s1) + len_read) * sizeof(char));
-	if (p == NULL)
+		return (ft_strdup(s2, len_read));
+	p = (char *) malloc ((ft_strlen(s1) + len_read + 1) * sizeof(char));
+	if (!p)
+	{
+		free (s1);
+		free (s2);
 		return (NULL);
+	}
 	while (s1[i] || j < len_read)
 	{
 		if (s1[i])
