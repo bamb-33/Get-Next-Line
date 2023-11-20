@@ -6,18 +6,73 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:17:43 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/20 18:49:36 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/20 20:01:25 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+int	f(char **buffer, char **tmp, size_t *j)
+{
+	if (*buffer)
+	{
+		while ((*buffer)[*j])
+		{
+			if ((*buffer)[*j] == '\n')
+			{
+				free(*tmp);
+				*tmp = ft_substr(*buffer, 0, (*j) + 1);
+				if (!(*tmp))
+				{
+					free(*buffer);
+					return (0);
+				}
+				*buffer = (char *)ft_realloc(*buffer, &(*buffer)[(*j) + 1], ft_strlen(*buffer));
+				if (!(*buffer))
+				{
+					free(*tmp);
+					return (0);
+				}
+
+				return (1);
+			}
+			(*j)++;
+		}
+	}
+	return (-1);
+}
+
+int	f2(char **buffer, char **tmp, int i)
+{
+	if (i == -1)
+	{
+		free(*tmp);
+		if (*buffer)
+			free(*buffer);
+		return (0);
+	}
+	if (i == 0 && (!*buffer || (*buffer)[0] == 0))
+	{
+		free(*tmp);
+		return (0);
+	}
+	else if (i == 0)
+	{
+		free(*tmp);
+		*tmp = *buffer;
+		*buffer = NULL;
+		return (1);
+	}
+	return (-1);
+}
+
 
 char	*get_next_line(int fd)
 {
 	size_t		size;
 	static char	*buffer;
 	char		*tmp;
-	size_t		i;
+	int			i;
 	size_t		j;
 
 	size = 1024;
@@ -26,7 +81,7 @@ char	*get_next_line(int fd)
 	tmp = (char *) malloc (sizeof(char) * size);
 	if (!tmp)
 		return (NULL);
-	if (read(fd, tmp, 0) < 0)
+	if (read(fd, tmp, 0) == -1)
 	{
 		free (tmp);
 		return (NULL);
@@ -41,50 +96,17 @@ char	*get_next_line(int fd)
 			size += BUFFER_SIZE;
 			tmp = (char *) ft_realloc(tmp, tmp, size);
 		}
-		if (buffer)
-		{
-			while (buffer[j])
-			{
-				if (buffer[j] == '\n')
-				{
-					free (tmp);
-					tmp = ft_substr(buffer, 0, j + 1);
-					if (!tmp)
-					{
-						free (buffer);
-						return (NULL);
-					}
-					buffer = (char *) ft_realloc(buffer, &buffer[j + 1], ft_strlen(buffer));
-					if (!buffer)
-					{
-						free (tmp);
-						return (NULL);
-					}
-					return (tmp);
-				}
-				j++;
-			}
-		}
+		i = f(&buffer, &tmp, &j);
+		if (i == 1)
+			return (tmp);
+		else if(i == 0)
+			return (NULL);
 		i = read(fd, tmp, BUFFER_SIZE);
-		if (i < 0)
-		{
-			free(tmp);
-			if (buffer)
-				free(buffer);
+		int k = f2(&buffer, &tmp, i);
+		if (k == 1)
+			return (tmp);
+		else if (k == 0)
 			return (NULL);
-		}
-		if (i == 0 && (!buffer || buffer[0] == 0))
-		{
-			free (tmp);
-			return (NULL);
-		}
-		else if (i == 0)
-		{
-			free(tmp);
-			tmp = buffer;
-			buffer = NULL;
-			return (tmp); // IDK mybe later
-		}
 		buffer = ft_strjoin(buffer, tmp, i);
 		if (!buffer)
 			return (NULL);
@@ -112,3 +134,49 @@ int main()
 	// 	printf("%d\n", rr[i]);
 	close (fd);
 }
+
+		// if (buffer)
+		// {
+		// 	while (buffer[j])
+		// 	{
+		// 		if (buffer[j] == '\n')
+		// 		{
+		// 			free (tmp);
+		// 			tmp = ft_substr(buffer, 0, j + 1);
+		// 			if (!tmp)
+		// 			{
+		// 				free (buffer);
+		// 				return (NULL);
+		// 			}
+		// 			buffer = (char *) ft_realloc(buffer, &buffer[j + 1], ft_strlen(buffer));
+		// 			if (!buffer)
+		// 			{
+		// 				free (tmp);
+		// 				return (NULL);
+		// 			}
+		// 			return (tmp);
+		// 		}
+		// 		j++;
+		// 	}
+		// }
+
+
+		// if (i == -1)
+		// {
+		// 	free(tmp);
+		// 	if (buffer)
+		// 		free(buffer);
+		// 	return (NULL);
+		// }
+		// if (i == 0 && (!buffer || buffer[0] == 0))
+		// {
+		// 	free (tmp);
+		// 	return (NULL);
+		// }
+		// else if (i == 0)
+		// {
+		// 	free(tmp);
+		// 	tmp = buffer;
+		// 	buffer = NULL;
+		// 	return (tmp); // IDK mybe later
+		// }
