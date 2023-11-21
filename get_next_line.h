@@ -6,16 +6,16 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 12:22:57 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/21 09:06:49 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/21 09:51:34 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-#ifndef BUFFER_SIZE
+# ifndef BUFFER_SIZE
 # define BUFFER_SIZE 10
-#endif
+# endif
 
 # include <stddef.h>
 # include <stdlib.h>
@@ -24,7 +24,7 @@
 # include <stdio.h>
 # include <stdint.h>
 
-void	*ft_realloc(void *add, void *half_add, size_t size);
+void	*ft_realloc(size_t index, void *add, size_t size);
 char	*ft_substr(char *s, unsigned int start, size_t len);
 size_t	ft_strlen(const char *s);
 char	*ft_strjoin(char *s1, char *s2, int len_read);

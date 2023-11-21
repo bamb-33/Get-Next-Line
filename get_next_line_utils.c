@@ -6,16 +6,16 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 11:54:47 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/20 19:20:54 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/21 09:57:46 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	*ft_realloc(void *add, void *half_add, size_t size)
+void	*ft_realloc(size_t index, void *add, size_t size)
 {
 	void	*new_add;
-	int		i;
+	size_t	i;
 
 	new_add = malloc (size * sizeof(char));
 	if (!new_add)
@@ -24,13 +24,16 @@ void	*ft_realloc(void *add, void *half_add, size_t size)
 		return (NULL);
 	}
 	i = 0;
-	while (((char *)half_add)[i])
+	while (((char *)add)[index + i + 1])
 	{
-		((char *) new_add)[i] = ((char *) half_add)[i];
+		((char *) new_add)[i] = ((char *) add)[index + i + 1];
 		i++;
 	}
-	((char *) new_add)[size - 1] = 0;
-	((char *) new_add)[i] = 0;
+	while (i < size)
+	{
+		((char *) new_add)[i] = 0;
+		i++;
+	}
 	free(add);
 	return (new_add);
 }
@@ -46,7 +49,10 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 		len = ft_strlen(s) - start;
 	subs = (char *) malloc ((len + 1) * sizeof(char));
 	if (subs == NULL)
+	{
+		free(s);
 		return (NULL);
+	}
 	i = 0;
 	while (i < len && s[start + i])
 	{
@@ -55,16 +61,6 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	}
 	subs[i] = 0;
 	return (subs);
-}
-
-size_t	ft_strlen(const char *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
 }
 
 static char	*ft_strdup(char *s1, int len_read)
@@ -88,6 +84,31 @@ static char	*ft_strdup(char *s1, int len_read)
 	return (scpy);
 }
 
+static char	*glue(char *s1, char *s2, char *p, int len_read)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (s1[i] || j < len_read)
+	{
+		if (s1[i])
+		{
+			p[i + j] = s1[i];
+			i++;
+		}
+		else
+		{
+			p[i + j] = s2[j];
+			j++;
+		}
+	}
+	free(s1);
+	p[i + j] = 0;
+	return (p);
+}
+
 char	*ft_strjoin(char *s1, char *s2, int len_read)
 {
 	char	*p;
@@ -105,20 +126,5 @@ char	*ft_strjoin(char *s1, char *s2, int len_read)
 		free (s2);
 		return (NULL);
 	}
-	while (s1[i] || j < len_read)
-	{
-		if (s1[i])
-		{
-			p[i + j] = s1[i];
-			i++;
-		}
-		else
-		{
-			p[i + j] = s2[j];
-			j++;
-		}
-	}
-	free(s1);
-	p[i + j] = 0;
-	return (p);
+	return (glue(s1, s2, p, len_read));
 }
