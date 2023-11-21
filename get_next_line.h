@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 12:22:57 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/21 09:51:34 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/21 18:02:23 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-# define BUFFER_SIZE 10
+# define BUFFER_SIZE 999
 # endif
 
 # include <stddef.h>

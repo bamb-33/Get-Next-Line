@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 11:54:47 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/21 09:57:46 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/21 16:21:32 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	*ft_realloc(size_t index, void *add, size_t size)
 	void	*new_add;
 	size_t	i;
 
-	new_add = malloc (size * sizeof(char));
+	new_add = malloc ((size) * sizeof(char));
 	if (!new_add)
 	{
 		free(add);

@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:17:43 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/21 09:49:30 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/21 17:57:24 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,10 @@ int	f2(char **buffer, char **tmp, int i)
 			free(*buffer);
 		return (0);
 	}
-	if (i == 0 && (!*buffer || (*buffer)[0] == 0))
+	else if (i == 0 && ft_strlen(*buffer) == 0)
 	{
 		free(*tmp);
+		free(*buffer);
 		return (0);
 	}
 	else if (i == 0)
@@ -80,6 +81,8 @@ int	f2(char **buffer, char **tmp, int i)
 
 int	allocation(char **tmp, int fd)
 {
+	if (fd < 0 || fd > 1023 || BUFFER_SIZE > SIZE_MAX || BUFFER_SIZE < 0)
+		return (0);
 	*tmp = (char *) malloc (sizeof(char) * (BUFFER_SIZE + 1));
 	if (!(*tmp))
 		return (0);
@@ -94,43 +97,49 @@ int	allocation(char **tmp, int fd)
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	*buffer[1024];
 	char		*tmp;
 	int			i;
-	int			k;
 
-	if (fd < 0 || fd > 1023 || BUFFER_SIZE > SIZE_MAX || BUFFER_SIZE < 0)
-		return (NULL);
 	if (allocation(&tmp, fd) == 0)
 		return (NULL);
-	i = 0;
 	while (1)
 	{
-		k = f(&buffer, &tmp);
-		if (k == 1)
+		i = f(&buffer[fd], &tmp);
+		if (i == 1)
 			return (tmp);
-		else if (k == 0)
+		else if (i == 0)
 			return (NULL);
 		i = read(fd, tmp, BUFFER_SIZE);
-		k = f2(&buffer, &tmp, i);
-		if (k == 1)
+		if (i == 0 && !buffer[fd])
+		{
+			free(tmp);
+			return (NULL);
+		}
+		i = f2(&buffer[fd], &tmp, i);
+		if (i == 1)
 			return (tmp);
-		else if (k == 0)
+		else if (i == 0)
 			return (NULL);
 	}
-	return (NULL);
 }
 
 // int main()
 // {
 // 	int fd = open("test.txt", O_RDONLY);
-// 	// printf("%s", r);
-// 	for (int i = 0; i < 5; i++)
-// 		printf("line :%s\n", get_next_line(fd));
-// 	//system("leaks a.out");
-// 	// get_next_line(fd);
-// 	// char *rr = get_next_line(fd);
-// 	// for (int i = 0; i < 1; i++)
-// 	// 	printf("%d\n", rr[i]);
+// 	//int fd1 = open("test1.txt", O_RDONLY);
+// 	char *str;
+// 	//char *str1;
+// 	while(1)
+// 	{
+// 		str = get_next_line(fd);
+// 		// str1 = get_next_line(fd1);
+// 		printf("line fd1:%s\n", str);
+// 		// printf("line fd2:%s\n", str1);
+// 		if (str == NULL)
+// 			break ;
+// 		free (str);
+// 	}
+// 	system("leaks a.out");
 // 	close (fd);
 // }
