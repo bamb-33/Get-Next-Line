@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/16 17:17:43 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/24 11:52:30 by naadou           ###   ########.fr       */
+/*   Created: 2023/11/23 11:04:13 by naadou            #+#    #+#             */
+/*   Updated: 2023/11/23 11:28:33 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t	ft_strlen(const char *s)
 {
@@ -37,7 +37,7 @@ static int	f(char **buffer, char **tmp)
 				*tmp = ft_substr(*buffer, 0, j + 1);
 				if (!(*tmp))
 					return (0);
-				*buffer = (char *)ft_realloc (j, (*buffer), ft_strlen(*buffer));
+				*buffer = (char *)ft_realloc(j, (*buffer), ft_strlen(*buffer));
 				if (!(*buffer))
 				{
 					free(*tmp);
@@ -55,7 +55,6 @@ static int	f1(char **buffer, char **tmp, int i)
 {
 	if (i == -1)
 	{
-		printf("fd failed\n");
 		free(*tmp);
 		if (*buffer)
 			free(*buffer);
@@ -84,18 +83,14 @@ static int	allocation(char **tmp, int fd)
 {
 	if (BUFFER_SIZE < 0)
 		return (0);
-	if (fd == -1)
+	if (fd < 0 || fd > 1023)
 		return (0);
-	*tmp = (char *) malloc (sizeof(char) * (BUFFER_SIZE + 1));
+	*tmp = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!(*tmp))
-	{
-		printf("allocation failed\n");
 		return (0);
-	}
 	if (read(fd, *tmp, 0) == -1)
 	{
-		printf("read failed\n");
-		free (*tmp);
+		free(*tmp);
 		return (0);
 	}
 	(*tmp)[BUFFER_SIZE] = 0;
@@ -104,7 +99,7 @@ static int	allocation(char **tmp, int fd)
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	*buffer[1024];
 	char		*tmp;
 	int			i;
 
@@ -112,41 +107,21 @@ char	*get_next_line(int fd)
 		return (NULL);
 	while (1)
 	{
-		i = f(&buffer, &tmp);
+		i = f(&buffer[fd], &tmp);
 		if (i == 1)
 			return (tmp);
 		else if (i == 0)
 			return (NULL);
 		i = read(fd, tmp, BUFFER_SIZE);
-		if (i == 0 && !buffer)
+		if (i == 0 && !buffer[fd])
 		{
 			free(tmp);
 			return (NULL);
 		}
-		i = f1(&buffer, &tmp, i);
+		i = f1(&buffer[fd], &tmp, i);
 		if (i == 1)
 			return (tmp);
 		else if (i == 0)
 			return (NULL);
 	}
 }
-
-int main()
-{
-	int fd = open("test.txt", O_RDONLY);
-	char *str;
-	int i = 0;
-	// printf("%zu", SIZE_MAX);
-	while(1)
-	{
-		str = get_next_line(fd);
-		printf("line fd1:%s\n", str);
-		if (str == NULL)
-			break ;
-		free (str);
-		i++;
-	}
-	// system("leaks a.out");
-	close (fd);
-}
-

@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*    get_next_line_bonus.h                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/17 12:22:57 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/23 15:36:31 by naadou           ###   ########.fr       */
+/*   Created: 2023/11/23 11:22:23 by naadou            #+#    #+#             */
+/*   Updated: 2023/11/23 11:29:25 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1
@@ -20,10 +20,8 @@
 # include <fcntl.h>
 # include <stddef.h>
 # include <stdint.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include <limits.h>
 
 void	*ft_realloc(size_t index, void *add, size_t size);
 char	*ft_substr(char *s, unsigned int start, size_t len);
