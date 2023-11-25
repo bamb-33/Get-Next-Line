@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 11:04:13 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/25 18:14:48 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/25 19:25:30 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,7 @@ static int	f1(char **buffer, char **tmp, int i)
 
 static int	allocation(char **tmp, int fd)
 {
-	if (BUFFER_SIZE + 1 < 0)
-		return (0);
-	if (fd == -1)
+	if (BUFFER_SIZE + 1 < 0 || fd == -1 || BUFFER_SIZE > INT_MAX)
 		return (0);
 	*tmp = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!(*tmp))

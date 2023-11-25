@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:17:43 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/25 18:14:40 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/25 19:25:01 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static int	f1(char **buffer, char **tmp, int i)
 
 static int	allocation(char **tmp, int fd)
 {
-	if (BUFFER_SIZE + 1  < 0 || fd == -1)
+	if (BUFFER_SIZE + 1  < 0 || fd == -1 || BUFFER_SIZE > INT_MAX)
 		return (0);
 	*tmp = (char *) malloc (sizeof(char) * (BUFFER_SIZE + 1));
 	if (!(*tmp))
@@ -122,21 +122,3 @@ char	*get_next_line(int fd)
 	}
 }
 
-int main()
-{
-	int fd = open("test.txt", O_RDONLY);
-	char *str;
-	int i = 0;
-	printf("buffer_size: %ld\n", BUFFER_SIZE+1);
-	while(1)
-	{
-		str = get_next_line(fd);
-		printf("line fd1:%s\n", str);
-		if (str == NULL)
-			break ;
-		free (str);
-		i++;
-	}
-	// system("leaks a.out");
-	close (fd);
-}
