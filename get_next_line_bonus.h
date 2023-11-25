@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 11:22:23 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/23 11:29:25 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/24 12:50:21 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <stdint.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <limits.h>
 
 void	*ft_realloc(size_t index, void *add, size_t size);
 char	*ft_substr(char *s, unsigned int start, size_t len);

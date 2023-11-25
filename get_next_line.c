@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:17:43 by naadou            #+#    #+#             */
-/*   Updated: 2023/11/24 11:52:30 by naadou           ###   ########.fr       */
+/*   Updated: 2023/11/25 18:14:40 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ static int	f1(char **buffer, char **tmp, int i)
 {
 	if (i == -1)
 	{
-		printf("fd failed\n");
 		free(*tmp);
 		if (*buffer)
 			free(*buffer);
@@ -82,22 +81,14 @@ static int	f1(char **buffer, char **tmp, int i)
 
 static int	allocation(char **tmp, int fd)
 {
-	if (BUFFER_SIZE < 0)
-		return (0);
-	if (fd == -1)
+	if (BUFFER_SIZE + 1  < 0 || fd == -1)
 		return (0);
 	*tmp = (char *) malloc (sizeof(char) * (BUFFER_SIZE + 1));
 	if (!(*tmp))
-	{
-		printf("allocation failed\n");
 		return (0);
-	}
 	if (read(fd, *tmp, 0) == -1)
-	{
-		printf("read failed\n");
 		free (*tmp);
 		return (0);
-	}
 	(*tmp)[BUFFER_SIZE] = 0;
 	return (-1);
 }
@@ -136,7 +127,7 @@ int main()
 	int fd = open("test.txt", O_RDONLY);
 	char *str;
 	int i = 0;
-	// printf("%zu", SIZE_MAX);
+	printf("buffer_size: %ld\n", BUFFER_SIZE+1);
 	while(1)
 	{
 		str = get_next_line(fd);
@@ -149,4 +140,3 @@ int main()
 	// system("leaks a.out");
 	close (fd);
 }
-
